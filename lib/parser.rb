@@ -1,4 +1,5 @@
 require 'parslet'
+require_relative 'tree_structs'
 
 class TestsParser < Parslet::Parser
   root(:top)
@@ -65,12 +66,6 @@ class TestsParser < Parslet::Parser
   end
   rule(:newline) { str("\n") >> str("\r").maybe }
 end
-
-Toplevel = Struct.new(:expressions)
-Describe = Struct.new(:message, :content, :line, :column)
-Context_ = Struct.new(:message, :content, :line, :column)
-It = Struct.new(:message, :content, :line, :column)
-Expectation = Struct.new(:content, :line, :column)
 
 class TestsTransform < Parslet::Transform
   rule(top: subtree(:expressions)) { Toplevel.new(expressions) }

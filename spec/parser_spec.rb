@@ -1,6 +1,7 @@
 require 'spec_helper'
 require 'parslet'
 require_relative '../lib/parser'
+require_relative '../lib/tree_structs'
 
 def parse_transform(code)
   parser = TestsParser.new

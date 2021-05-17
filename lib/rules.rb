@@ -6,15 +6,18 @@ def report_error(line, column, message)
   "\t#{location}: #{message}"
 end
 
-class TopRules
-  @rules = [one_entry]
-
-  def initialize; end
-
-  def one_entry(toplevel)
-    message = 'An rspec file should have one toplevel group of tests'
-    report_error(1, 1, message) unless (toplevel.expressions.length == 1)
-  end
-
-  def describe_entry(toplevel); end
+Toplevel = Struct.new(:expressions) do
+  def lint(linter); end
+end
+Describe = Struct.new(:message, :content, :line, :column) do
+  def lint(linter); end
+end
+Context_ = Struct.new(:message, :content, :line, :column) do
+  def lint(linter); end
+end
+It = Struct.new(:message, :content, :line, :column) do
+  def lint(linter); end
+end
+Expectation = Struct.new(:content, :line, :column) do
+  def lint(linter); end
 end
