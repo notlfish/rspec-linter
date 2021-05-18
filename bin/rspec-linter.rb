@@ -25,15 +25,15 @@ def test_files(working_directory)
   tests
 end
 
-def run!
+def run
   case ARGV.length
   when 0
-    Linter.new(test_files(Dir.pwd)).run!
+    puts Linter.new(test_files(Dir.pwd)).run
   when 1
-    Linter.new([ARGV[0]]).run!
+    puts Linter.new([ARGV[0]]).run
   else
     puts arguments_usage
   end
 end
 
-run! if __FILE__ == $PROGRAM_NAME
+run if __FILE__ == $PROGRAM_NAME

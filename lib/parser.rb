@@ -15,7 +15,7 @@ class TestsParser < Parslet::Parser
   end
 
   rule(:context) do
-    context_tag.as(:c_tag) >> string.as(:message) >> block.as(:block)
+    context_tag.as(:context) >> string.as(:message) >> block.as(:block)
   end
   rule(:context_tag) { space? >> str('context') >> space? }
 
@@ -49,20 +49,20 @@ class TestsParser < Parslet::Parser
   rule(:eof) { any.absent? }
   rule(:string) { single_quoted_string | double_quoted_string }
   rule(:single_quoted_string) do
-    str("'") >>
+    str("'").ignore >>
       (
         str('\\').ignore >> any |
         str("'").absent? >> any
       ).repeat >>
-      str("'")
+      str("'").ignore
   end
   rule(:double_quoted_string) do
-    str('"') >>
+    str('"').ignore >>
       (
         str('\\').ignore >> any |
         str('"').absent? >> any
       ).repeat >>
-      str('"')
+      str('"').ignore
   end
   rule(:newline) { str("\n") >> str("\r").maybe }
 end
@@ -75,15 +75,15 @@ class TestsTransform < Parslet::Transform
     block: subtree(:content)
   ) do
     line, column = tag.line_and_column
-    Describe.new(message, content[:content], line, column)
+    Describe.new(message.to_s, content[:content], line, column)
   end
   rule(
-    c_tag: simple(:tag),
+    context: simple(:tag),
     message: simple(:message),
     block: subtree(:content)
   ) do
     line, column = tag.line_and_column
-    Context_.new(message, content[:content], line, column)
+    Context_.new(message.to_s, content[:content], line, column)
   end
   rule(
     it: simple(:tag),
@@ -91,7 +91,7 @@ class TestsTransform < Parslet::Transform
     block: subtree(:content)
   ) do
     line, column = tag.line_and_column
-    It.new(message, content[:content], line, column)
+    It.new(message.to_s, content[:content], line, column)
   end
   rule(
     expectation: simple(:expectation)
