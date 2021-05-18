@@ -1,8 +1,10 @@
 Toplevel = Struct.new(:expressions) do
-  attr_reader :filename
+  attr_reader :filename, :line, :column
 
   def add_name(filename)
     @filename = filename
+    @line = 0
+    @column = 0
   end
 
   def lint(linter)
