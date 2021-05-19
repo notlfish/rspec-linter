@@ -27,15 +27,21 @@ class Linter
   end
 
   def run
-    errors = ''
+    errors = "\n"
     @files.each do |file|
       tree = parse_transform(file)
       tree.add_name(file)
       file_errors = tree.lint(self)
-      errors += "#{file}\n#{file_errors}" unless file_errors
+      if file_errors.empty?
+        print '.'
+      else
+        print 'F'
+        errors += "\n#{file}\n#{report(file_errors)}" unless file_errors.empty?
+      end
     end
-    errors unless errors.empty?
+    return errors unless errors == "\n"
+
     success = 'no offenses'.colorize(:green)
-    "#{@files.length} files inspected, #{success} detected"
+    "\n#{@files.length} files inspected, #{success} detected"
   end
 end

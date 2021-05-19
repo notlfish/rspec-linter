@@ -4,20 +4,22 @@ require 'colorize'
 def report_error(error)
   location = "#{error[:line]}, #{error[:column]}".colorize(:yellow)
   message = "\t#{location}: #{error[:message]}"
-  rule = "#{error.kind}/#{error[:rule]}".colorize(:blue)
-  "\n#{message}:\t\trule:[#{rule}]"
+  rule = "#{error[:kind]}/#{error[:rule]}".colorize(:blue)
+  "#{message}:\t\trule:[#{rule}]"
 end
 
 def report(errors)
   return if errors.empty?
 
   errors.sort! do |err1, err2|
-    lines = err1.line - err2.line
-    return lines unless lines.zero?
-
-    err1.column - err2.column
+    lines = err1[:line] - err2[:line]
+    if lines.zero?
+      err1[:column] - err2[:column]
+    else
+      lines
+    end
   end
-  errors.map(&:report_error).join('\n')
+  (errors.map { |error| report_error(error) }).join("\n")
 end
 
 def create_error(message, rule, node)

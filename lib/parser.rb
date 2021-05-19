@@ -4,7 +4,7 @@ require_relative 'tree_structs'
 class TestsParser < Parslet::Parser
   root(:top)
 
-  rule(:top) { (skip? >> expression >> skip?).repeat.as(:top) >> eof }
+  rule(:top) { (skip!.maybe >> expression >> skip!.maybe).repeat.as(:top) >> eof }
   rule(:expression) { describe | context | it | expectation }
 
   rule(:describe) do
@@ -25,13 +25,15 @@ class TestsParser < Parslet::Parser
   rule(:block) { space? >> (do_block | braces_block) >> space? }
   rule(:do_block) do
     str('do') >>
-      (str('end').absent? >> (expression | skip?)).repeat.as(:content) >>
+      (str('end').absent? >>
+       (expression | block.ignore | any)).repeat.as(:content) >>
       str('end')
   end
   rule(:braces_block) do
     str('{') >>
-      (str('}').absent? >> (expression | skip?)).repeat.as(:content) >>
-      str('}')
+      (str('}').absent? >>
+       (expression | block.ignore | any)).repeat.as(:content) >>
+      str('}') >> space?
   end
 
   rule(:expectation) do
@@ -41,6 +43,7 @@ class TestsParser < Parslet::Parser
 
   rule(:skip?) { skip.maybe }
   rule(:skip) { ((expression | closing_tag).absent? >> any).repeat(1) }
+  rule(:skip!) { (expression.absent? >> any).repeat(1) }
   rule(:line) { space? >> (newline.absent? >> any).repeat >> newline }
   rule(:space) { match('\s').repeat(1) }
   rule(:space?) { space.maybe }
@@ -99,4 +102,5 @@ class TestsTransform < Parslet::Transform
     line, column = expectation.line_and_column
     Expectation.new(expectation.to_s, line, column)
   end
+  rule(content: simple(:content)) { { content: [] } }
 end

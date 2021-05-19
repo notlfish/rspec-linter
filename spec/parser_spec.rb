@@ -9,7 +9,7 @@ def parse_transform(code)
   transformer.apply(parser.parse(code))
 end
 
-RSpec.describe 'parser' do
+RSpec.describe 'TestsParser' do
   let(:expectation) { parse_transform('expect(1+2).to eq(3)') }
   let(:it_expect) do
     parse_transform(
@@ -38,7 +38,7 @@ RSpec.describe 'parser' do
     )
   end
 
-  describe 'Transform tests' do
+  describe 'TestsTransform' do
     context 'when parsing one expectation' do
       it 'toplevel has only one expression' do
         expect(expectation.expressions.length).to eq(1)

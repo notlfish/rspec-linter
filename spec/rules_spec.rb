@@ -1,5 +1,6 @@
 require_relative '../lib/rules'
 require_relative '../lib/tree_structs'
+require 'colorize'
 
 RSpec.describe 'Linter' do
   let(:linter) do
@@ -148,6 +149,59 @@ RSpec.describe 'Linter' do
       it ':one_expectation error' do
         error_rule = no_expectations_it.lint(linter)[0][:rule]
         expect(error_rule).to eq(:one_expectation)
+      end
+    end
+  end
+
+  describe '#report_error' do
+    let(:error) do
+      { message: 'Mistakes were made',
+        line: 1,
+        column: 1,
+        kind: Toplevel,
+        rule: :entry_point }
+    end
+    let(:error_message) do
+      location = '1, 1'.colorize(:yellow)
+      rule = 'Toplevel/entry_point'.colorize(:blue)
+      "\t#{location}: Mistakes were made:\t\trule:[#{rule}]"
+    end
+
+    it 'reports correct message' do
+      expect(report_error(error)).to eq(error_message)
+    end
+  end
+
+  describe '#report' do
+    let(:error_line1) do
+      { message: 'Mistakes were made',
+        line: 1,
+        column: 1,
+        kind: Toplevel,
+        rule: :entry_point }
+    end
+    let(:error_message_line1) do
+      location = '1, 1'.colorize(:yellow)
+      rule = 'Toplevel/entry_point'.colorize(:blue)
+      "\t#{location}: Mistakes were made:\t\trule:[#{rule}]"
+    end
+    let(:error_line2) do
+      { message: 'Mistakes were made',
+        line: 2,
+        column: 1,
+        kind: Toplevel,
+        rule: :entry_point }
+    end
+    let(:error_message_line2) do
+      location = '2, 1'.colorize(:yellow)
+      rule = 'Toplevel/entry_point'.colorize(:blue)
+      "\t#{location}: Mistakes were made:\t\trule:[#{rule}]"
+    end
+    context 'when more than 1 error' do
+      it 'reports errors correctly' do
+        error_message = "#{error_message_line1}\n#{error_message_line2}"
+        errors = [error_line2, error_line1]
+        expect(report(errors)).to eq(error_message)
       end
     end
   end

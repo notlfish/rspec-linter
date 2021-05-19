@@ -1,7 +1,7 @@
 require 'spec_helper'
 require_relative '../bin/rspec-linter'
 
-RSpec.describe 'rspec-linter' do
+RSpec.describe 'Rspec-linter' do
   describe '#test_file' do
     context 'when result is true' do
       it 'filename ends with _test.rb' do
