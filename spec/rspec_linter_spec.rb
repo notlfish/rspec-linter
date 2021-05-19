@@ -1,5 +1,5 @@
 require 'spec_helper'
-require_relative '../bin/rspec-linter'
+require_relative '../lib/rspec_linter'
 
 RSpec.describe 'Rspec-linter' do
   describe '#test_file' do
