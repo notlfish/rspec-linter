@@ -111,9 +111,44 @@ RSpec.describe 'Linter' do
         expect(clean_context.lint(linter)).to eq([])
       end
     end
+
+    let(:bad_message_context) { Context_.new('something happened', [], 1, 1) }
+
+    context "when message doesn't begin with 'with', 'without', or 'when'" do
+      it 'one linting error' do
+        expect(bad_message_context.lint(linter).length).to eq(1)
+      end
+
+      it ':first_word error' do
+        error_rule = bad_message_context.lint(linter)[0][:rule]
+        expect(error_rule).to eq(:first_word)
+      end
+    end
   end
 
   describe 'ItRules' do
-    1
+    let(:clean_it) do
+      expectation = Expectation.new('expect(1 + 2).to eq(3)', 2, 2)
+      It.new('simple addition', [expectation], 1, 1)
+    end
+
+    context 'when there are no linting errors' do
+      it 'empty linting errors list' do
+        expect(clean_it.lint(linter)).to eq([])
+      end
+    end
+
+    let(:no_expectations_it) { It.new('useless example', [], 1, 1) }
+
+    context 'when there are no expectations' do
+      it 'one linting error' do
+        expect(no_expectations_it.lint(linter).length).to eq(1)
+      end
+
+      it ':one_expectation error' do
+        error_rule = no_expectations_it.lint(linter)[0][:rule]
+        expect(error_rule).to eq(:one_expectation)
+      end
+    end
   end
 end

@@ -97,6 +97,6 @@ class TestsTransform < Parslet::Transform
     expectation: simple(:expectation)
   ) do
     line, column = expectation.line_and_column
-    Expectation.new(expectation, line, column)
+    Expectation.new(expectation.to_s, line, column)
   end
 end

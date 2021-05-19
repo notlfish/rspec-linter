@@ -103,6 +103,11 @@ class ItRules < Rules
     cond = test.content.length == 1 && test.content[0].is_a?(Expectation)
     create_error(message, :one_expectation, test) unless cond
   end
+
+  def initialize
+    super
+    @rules.push(:one_expectation)
+  end
 end
 
 class ExpectationRules < Rules; end
