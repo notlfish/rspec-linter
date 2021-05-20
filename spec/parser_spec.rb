@@ -91,11 +91,38 @@ RSpec.describe 'TestsParser' do
       end
 
       it 'toplevel > describe > context has one it' do
-        it = full_nested.expressions[0].content[0].content[0]
-        expectations = it.content.count do |exp|
+        its = full_nested.expressions[0].content[0].content[0]
+        expectations = its.content.count do |exp|
           exp.is_a? Expectation
         end
         expect(expectations).to eq(2)
+      end
+    end
+
+    context 'when parsing an empty file' do
+      it 'returns an empty toplevel' do
+        expect(parse_transform('')).to eq(Toplevel.new([]))
+      end
+    end
+
+    let(:broken) do
+      parse_transform(
+        <<~TEST1
+          describe do
+            context 'when something random' do
+              it 'has more than one expectation' do
+                a = 11
+                expect(1 + 2).to eq(3)
+                expect 'nobody expects the Spanish Inquisition!'
+              end
+            end
+          end
+      TEST1
+      )
+    end
+    context 'when parsing a broken file' do
+      it 'raises an error' do
+        expect { parse_transform(broken) }.to raise_error(ArgumentError)
       end
     end
   end
