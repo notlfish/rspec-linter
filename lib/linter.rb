@@ -58,9 +58,8 @@ class Linter
         errors += "\n#{file}\n#{report(file_errors)}" unless file_errors.empty?
       end
     end
-    return errors unless errors == "\n"
-
-    success = 'no offenses'.colorize(:green)
-    "\n#{@files.length} files inspected, #{success} detected"
+    no_offenses = 'no offenses'.colorize(:green)
+    success = "\n#{@files.length} files inspected, #{no_offenses} detected"
+    errors == "\n" ? success : errors
   end
 end
