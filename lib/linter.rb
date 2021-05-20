@@ -16,7 +16,7 @@ class Linter
     location = "#{error[:line]}, #{error[:column]}".colorize(:yellow)
     message = "\t#{location}: #{error[:message]}"
     rule = "#{error[:kind]}/#{error[:rule]}".colorize(:blue)
-    "#{message}:\t\trule:[#{rule}]"
+    "#{message}: rule:[#{rule}]"
   end
 
   def report(errors)

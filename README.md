@@ -5,6 +5,8 @@ The style guidelines are a subset of those found at [betterspecs.org](https://ww
 
 > This project was originally proposed by [Microverse](https://www.microverse.org/)
 
+![Screenshot](assets/screenshot.png)
+
 ## Getting Started
 
 ### Prerequisites
@@ -23,17 +25,11 @@ On GitHub bash, or a unix-like terminal:
 - To clone the project to your machine, run `git clone https://github.com/notlfish/rspec-linter.git`.
 - To enter the project folder, run `cd rspec-linter`.
 - To install the required dependencies, run `bundle install`.
-- In linux or mac, run `export PATH=$PWD/bin:$PATH` from the project folder to add the executable
-to your path (you'll need this to call rspec-linter from any folder).
+- To build the project gem, run `gem build rspec-linter.gemspec`
+- After building the gem, to intall the executable, run `gem install rspec-linter-0.0.1.gem`
 
 ### Usage
-After completing the [instalation](#instalation) intruction, go to the folder of your terminal and run
-`rspec-linter`. rspec-linter will run on all your files whose names end with "_test.rb" or "_spec.rb"
-in the folder from where it's called or on its "spec" subfolder.
-
-For you to be able to use rspec-linter by running `rspec-linter` you have to complete the last installation
-step, and stay in the same terminal session. Otherwise you'll have to call rspec linter using
-`<path to rspec-linter folder>/bin/rspec-linter`.
+After completing the [instalation](#instalation) intructions, go to the folder of your project and run `rspec-linter`. rspec-linter will run on all your files whose names end with "_test.rb" or "_spec.rb" in the folder from where rspec-linter was called, or in its "spec" subfolder.
 
 ## Rules
 This is a linter that works on rspec test suites and only seeks to enforce consistent styling in the
@@ -92,7 +88,6 @@ describe 'Addition'
   end
 end
 ```
-
 ### Describe message
 describe should be used to group tests corresponding to classes or methods. As such, describe
 messages are only allowed to have one word, and begin with uppercase (like a class name),
@@ -188,16 +183,15 @@ The easiest case is when there are no errors:
 If the checked files contained no linting errors, we'll see a message telling us how many files were checked,
 and that no errors were found.
 
-![Errors](assets/failure.png)
+![Errors](assets/screenshot.png)
 If there were errors found in the checked files, then we'll see error messages that:
 - Tell us the file were the errors were found, starting in the first column.
 - Under the file name, and with a tab of indentation, it will list the errors.
-- Each error begins with two yellow numbers separated by a comma. Those are the line and column
-numbers, in that order.
-- Then there will be a message in normal color, trying to give an explanation of what the error is.
+- Each error begins with two yellow numbers separated by a comma. Those are the line and column numbers, in that order.
+- Then there will be a message in normal color, trying to give an explanation of what the error is. In light magenta is the name of the rspec method with which the linting error is associated.
 - Finally, between square brackets, and in blue, we see words separated by a "/". To the left of the
-"/" is the rspec function that the error is linked with. To the right of the "/" is the name of the
-linting rule. This information is primarily for advanced users.
+"/" is the rspec function that the error is linked with. To the right of the "/" is the name of the linting rule. This information is primarily for advanced users.
+
 ## Built With
 
 - Ruby 3.0.1

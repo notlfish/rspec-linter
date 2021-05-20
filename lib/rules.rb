@@ -32,13 +32,14 @@ class ToplevelRules < Rules
   private
 
   def rspec_filename(toplevel)
-    message = "Toplevel name should end with '_spec.rb'"
+    message = "Test file names should end with '_spec.rb'"
     cond = toplevel.filename&.end_with?('_spec.rb')
     create_error(message, :rspec_filename, toplevel) unless cond
   end
 
   def entry_point(toplevel)
-    message = 'All tests should be grouped in one describe'
+    method = 'describe'.colorize(:light_magenta)
+    message = "All tests should be grouped in one #{method}"
     conditions = []
     conditions[0] = toplevel.expressions.length == 1
     conditions[1] = toplevel.expressions[0].is_a? Describe
@@ -58,7 +59,8 @@ class DescribeRules < Rules
   private
 
   def class_or_method_message(describe)
-    message = 'describe message should only contain the name of the class or method being tested'
+    method = 'describe'.colorize(:light_magenta)
+    message = "#{method} message should only contain the name of the class or method being tested"
     conds = [false]
     unless describe.message.empty?
       conds[0] = describe.message.split.length == 1
@@ -82,7 +84,8 @@ class ContextRules < Rules
   def first_word(context)
     first_word = %w[when with without]
     cond = first_word.include? context.message.split[0]
-    message = 'context message should begin with "when", "with", or "without"'
+    method = 'context'.colorize(:light_magenta)
+    message = "#{method} message should begin with 'when', 'with', or 'without'"
     create_error(message, :first_word, context) unless cond
   end
 
@@ -98,7 +101,8 @@ class ItRules < Rules
   private
 
   def one_expectation(test)
-    message = 'it should contain exactly one expectation'
+    method = 'it'.colorize(:light_magenta)
+    message = "#{method} should contain exactly one expectation"
     cond = test.content.length == 1 && test.content[0].is_a?(Expectation)
     create_error(message, :one_expectation, test) unless cond
   end
