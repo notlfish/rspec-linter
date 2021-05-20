@@ -51,7 +51,7 @@ Examples of bad names (assuming your current directory is your project root**:
 **Files whose names don't end with "_test.rb" or "_spec.rb" will be ignored by rspec-linter**
 
 ### Test suite entry point
-All your tests must be grouped inside one describe or RSpec.describe.
+All your tests must be grouped inside one `describe` or `RSpec.describe`.
 
 Example of good code
 ```ruby
@@ -89,9 +89,7 @@ describe 'Addition'
 end
 ```
 ### Describe message
-describe should be used to group tests corresponding to classes or methods. As such, describe
-messages are only allowed to have one word, and begin with uppercase (like a class name),
-"#" (like an instance method), or "." (like a class method).
+`describe` should be used to group tests corresponding to classes or methods. As such, `describe` messages are only allowed to have one word, and begin with uppercase (like a class name), "#" (like an instance method), or "." (like a class method).
 
 Example of good code
 ```ruby
@@ -125,8 +123,7 @@ end
 ```
 
 ### Context message
-context is used to describe a situation that affects the result of the method you're testing.
-As such, its message should begin with "when", "with". or "without".
+`context` is used to describe a situation that affects the result of the method you're testing. As such, its message should begin with "when", "with". or "without".
 
 Example of good code
 
@@ -150,9 +147,7 @@ end
 ```
 
 ### It one expectation
-it is used to give useful message to our test examples should they fail. As such it's not useful
-to put several examples inside the same it since any of them failing will give us the same, now
-not so useful, message.
+`it` is used to give useful message to our test examples should they fail. As such, it's not useful to put several examples inside the same `it` since any of them failing will give us the same, not so useful, message.
 
 Examples of good code
 
