@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+require_relative '../lib/rspec_linter'
+
+RspecLinter.new.run(ARGV)
