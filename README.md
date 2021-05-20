@@ -28,7 +28,7 @@ to your path (you'll need this to call rspec-linter from any folder).
 
 ### Usage
 After completing the [instalation](#instalation) intruction, go to the folder of your terminal and run
-`rspec-linter`. rspec-linter will run on all your files whose names end with "_test.rb" or "_spec.rb_"
+`rspec-linter`. rspec-linter will run on all your files whose names end with "_test.rb" or "_spec.rb"
 in the folder from where it's called or on its "spec" subfolder.
 
 For you to be able to use rspec-linter by running `rspec-linter` you have to complete the last installation
@@ -44,13 +44,14 @@ The following rules are implemented:
 ### Test file naming
 Your test file names must end with '_spec.rb' to pass this test.
 
-Examples of good names (assuming your current directory is your proyect root):
+Examples of good names (assuming your current directory is your project root):
 - test_spec.rb
 - spec/test_spec.rb
 
-Examples of bad names (assuming your current directory is your proyect root**:
+Examples of bad names (assuming your current directory is your project root**:
 - test_test.rb
 - spec/test_test.rb
+
 **Files whose names don't end with "_test.rb" or "_spec.rb" will be ignored by rspec-linter**
 
 ### Test suite entry point

@@ -1,39 +1,22 @@
 require_relative 'tree_structs'
 require 'colorize'
 
-def report_error(error)
-  location = "#{error[:line]}, #{error[:column]}".colorize(:yellow)
-  message = "\t#{location}: #{error[:message]}"
-  rule = "#{error[:kind]}/#{error[:rule]}".colorize(:blue)
-  "#{message}:\t\trule:[#{rule}]"
-end
-
-def report(errors)
-  return if errors.empty?
-
-  errors.sort! do |err1, err2|
-    lines = err1[:line] - err2[:line]
-    if lines.zero?
-      err1[:column] - err2[:column]
-    else
-      lines
-    end
-  end
-  (errors.map { |error| report_error(error) }).join("\n")
-end
-
-def create_error(message, rule, node)
-  { message: message,
-    line: node.line,
-    column: node.column,
-    kind: node.class,
-    rule: rule }
-end
-
 class Rules
+  private
+
+  def create_error(message, rule, node)
+    { message: message,
+      line: node.line,
+      column: node.column,
+      kind: node.class,
+      rule: rule }
+  end
+
   def initialize
     @rules = []
   end
+
+  public
 
   def run(node)
     errors = []
@@ -46,6 +29,8 @@ class Rules
 end
 
 class ToplevelRules < Rules
+  private
+
   def rspec_filename(toplevel)
     message = "Toplevel name should end with '_spec.rb'"
     cond = toplevel.filename&.end_with?('_spec.rb')
@@ -60,6 +45,8 @@ class ToplevelRules < Rules
     create_error(message, :entry_point, toplevel) unless conditions.all?
   end
 
+  public
+
   def initialize
     super
     @rules.push(:rspec_filename)
@@ -68,6 +55,8 @@ class ToplevelRules < Rules
 end
 
 class DescribeRules < Rules
+  private
+
   def class_or_method_message(describe)
     message = 'describe message should only contain the name of the class or method being tested'
     conds = [false]
@@ -79,6 +68,8 @@ class DescribeRules < Rules
     create_error(message, :class_or_method_message, describe) unless conds.all?
   end
 
+  public
+
   def initialize
     super
     @rules.push(:class_or_method_message)
@@ -86,12 +77,16 @@ class DescribeRules < Rules
 end
 
 class ContextRules < Rules
+  private
+
   def first_word(context)
     first_word = %w[when with without]
     cond = first_word.include? context.message.split[0]
     message = 'context message should begin with "when", "with", or "without"'
     create_error(message, :first_word, context) unless cond
   end
+
+  public
 
   def initialize
     super
@@ -100,11 +95,15 @@ class ContextRules < Rules
 end
 
 class ItRules < Rules
+  private
+
   def one_expectation(test)
     message = 'it should contain exactly one expectation'
     cond = test.content.length == 1 && test.content[0].is_a?(Expectation)
     create_error(message, :one_expectation, test) unless cond
   end
+
+  public
 
   def initialize
     super

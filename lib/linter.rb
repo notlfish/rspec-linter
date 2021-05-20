@@ -12,6 +12,25 @@ class Linter
     @transformer.apply(@parser.parse(file_data))
   end
 
+  def report_error(error)
+    location = "#{error[:line]}, #{error[:column]}".colorize(:yellow)
+    message = "\t#{location}: #{error[:message]}"
+    rule = "#{error[:kind]}/#{error[:rule]}".colorize(:blue)
+    "#{message}:\t\trule:[#{rule}]"
+  end
+
+  def report(errors)
+    errors.sort! do |err1, err2|
+      lines = err1[:line] - err2[:line]
+      if lines.zero?
+        err1[:column] - err2[:column]
+      else
+        lines
+      end
+    end
+    (errors.map { |error| report_error(error) }).join("\n")
+  end
+
   public
 
   def initialize(files)
